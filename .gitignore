@@ -1,0 +1,28 @@
+# Python files and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Data files (avoid tracking large datasets)
+data/
+*.csv
+*.tsv
+*.json
+
+# Model files (e.g., TensorFlow or PyTorch models)
+models/
+*.h5
+*.ckpt
+
+# Logs
+logs/
+*.log
+
