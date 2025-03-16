@@ -18,9 +18,10 @@ data/
 *.json
 
 # Model files (e.g., TensorFlow or PyTorch models)
-models/
-*.h5
-*.ckpt
+models/**/*.h5
+models/**/*.pt
+
+# !models/**/*.py
 
 # Logs
 logs/
