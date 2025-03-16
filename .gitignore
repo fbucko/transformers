@@ -12,18 +12,11 @@ env/
 .ipynb_checkpoints/
 
 # Data files (avoid tracking large datasets)
-data/
-*.csv
-*.tsv
-*.json
+data/**/*.csv
+data/**/*.tsv
+data/**/*.json
 
 # Model files (e.g., TensorFlow or PyTorch models)
 models/**/*.h5
 models/**/*.pt
-
-# !models/**/*.py
-
-# Logs
-logs/
-*.log
 
