@@ -1,4 +1,5 @@
 # training/trainer.py
+import os
 import torch
 import torch.optim as optim
 import torch.distributed as dist
@@ -6,6 +7,10 @@ import torch.multiprocessing as mp
 from torch.utils.data import DataLoader, DistributedSampler
 from tqdm import tqdm
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
+from datetime import datetime
+
+# Logging function from the utils module
+from utils.logger import log_metrics
 
 def train_epoch(model, dataloader, optimizer, device, rank):
     """
@@ -70,6 +75,12 @@ def main_worker(gpu, ngpus_per_node, args, train_dataset, val_dataset, tokenizer
         rank=gpu
     )
 
+    # Create directories for logs and saved models
+    logs_dir = os.path.join(os.getcwd(), "logs")
+    os.makedirs(logs_dir, exist_ok=True)
+    saved_models_dir = os.path.join(os.getcwd(), "models", "saved_models")
+    os.makedirs(saved_models_dir, exist_ok=True)
+
     # Create distributed samplers and data loaders
     train_sampler = DistributedSampler(train_dataset, num_replicas=ngpus_per_node, rank=gpu, shuffle=True)
     val_sampler = DistributedSampler(val_dataset, num_replicas=ngpus_per_node, rank=gpu, shuffle=False)
@@ -84,6 +95,13 @@ def main_worker(gpu, ngpus_per_node, args, train_dataset, val_dataset, tokenizer
 
     optimizer = optim.AdamW(model.parameters(), lr=args.LEARNING_RATE)
 
+    # Only rank 0 will handle printing, logging, and saving the model
+    run_id = None
+    if gpu == 0:
+        run_id = getattr(args, "run_id", None)
+        if run_id is None:
+            run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+
     for epoch in range(args.EPOCHS):
         train_sampler.set_epoch(epoch)
         train_loss = train_epoch(model, train_loader, optimizer, device, gpu)
@@ -94,6 +112,16 @@ def main_worker(gpu, ngpus_per_node, args, train_dataset, val_dataset, tokenizer
             print(f"Train Loss: {train_loss:.4f}")
             print(f"Validation - Accuracy: {val_acc:.4f}, Precision: {val_precision:.4f}, "
                   f"Recall: {val_recall:.4f}, F1: {val_f1:.4f}")
+            # Prepare a separate log file for this run
+            log_file = os.path.join(logs_dir, f"training_logs_{run_id}.csv")
+            log_metrics(run_id, epoch + 1, train_loss, val_acc, val_precision, val_recall, val_f1, log_file=log_file)
+
+    # Save the trained model (only by the main process)
+    if gpu == 0:
+        model_save_path = os.path.join(saved_models_dir, f"model_{run_id}.pt")
+        # Save the underlying model state dict from DDP
+        torch.save(model.module.state_dict(), model_save_path)
+        print(f"Model saved to {model_save_path}")
 
     dist.destroy_process_group()
 
