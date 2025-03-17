@@ -18,5 +18,5 @@ data/**/*.json
 
 # Model files (e.g., TensorFlow or PyTorch models)
 models/**/*.h5
-models/**/*.pt
+# models/**/*.pt
 
