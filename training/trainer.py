@@ -90,6 +90,7 @@ def main_worker(gpu, ngpus_per_node, args, train_dataset, val_dataset, tokenizer
 
     # Initialize model and wrap with DDP
     model = get_model_fn(args.PRETRAINED_MODEL_NAME)
+    print(f" ===== Initializing {args.PRETRAINED_MODEL_NAME} ===== ")
     model.to(device)
     model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[gpu], output_device=gpu)
 
@@ -113,12 +114,12 @@ def main_worker(gpu, ngpus_per_node, args, train_dataset, val_dataset, tokenizer
             print(f"Validation - Accuracy: {val_acc:.4f}, Precision: {val_precision:.4f}, "
                   f"Recall: {val_recall:.4f}, F1: {val_f1:.4f}")
             # Prepare a separate log file for this run
-            log_file = os.path.join(logs_dir, f"{args.TYPE}_training_logs_{run_id}.csv")
+            log_file = os.path.join(logs_dir, f"{args.TYPE}_{args.MODEL_SAVE_NAME}_training_logs_{run_id}.csv")
             log_metrics(run_id, epoch + 1, train_loss, val_acc, val_precision, val_recall, val_f1, log_file=log_file)
 
     # Save the trained model (only by the main process)
     if gpu == 0:
-        model_save_path = os.path.join(saved_models_dir, f"{args.TYPE}_model_{run_id}.pt")
+        model_save_path = os.path.join(saved_models_dir, f"{args.TYPE}_{args.MODEL_SAVE_NAME}_{run_id}.pt")
         # Save the underlying model state dict from DDP
         torch.save(model.module.state_dict(), model_save_path)
         print(f"Model saved to {model_save_path}")
