@@ -25,7 +25,7 @@ def main():
     val_dataset = DomainDataset(val_domains, val_labels, tokenizer, Config.MAX_LENGTH)
 
     # 5. Start training using distributed processes
-    train(Config, train_dataset, val_dataset, tokenizer, get_model)
+    train(Config(), train_dataset, val_dataset, tokenizer, get_model)
 
 if __name__ == "__main__":
     main()
