@@ -2,7 +2,7 @@ import argparse
 from sklearn.model_selection import train_test_split
 from transformers import AutoTokenizer
 from config import Config
-from data.dataset import DatasetLoader, DomainDataset, RDAPDataset
+from data.dataset import DatasetLoader, DomainDataset, RDAPDataset, DNSDataset
 from models.transformer_model import get_model
 from training.trainer import train
 
@@ -10,7 +10,7 @@ def parse_args(config: Config):
     parser = argparse.ArgumentParser(
         description="Train a transformer model on domain or RDAP data."
     )
-    parser.add_argument("--data_type", type=str, choices=["domain", "rdap"],
+    parser.add_argument("--data_type", type=str, choices=["domain", "rdap", "dns"],
                         default=config.DATA_TYPE,
                         help="Type of data to train on: 'domain' for domain names or 'rdap' for RDAP data.")
     parser.add_argument("--type", type=str, choices=["dga", "malware", "phish"],
@@ -21,6 +21,9 @@ def parse_args(config: Config):
                         help="Path to the domain dataset CSV.")
     parser.add_argument("--rdap_data_path", type=str,
                         default=config.RDAP_DATA_PATH,
+                        help="Path to the RDAP dataset CSV.")
+    parser.add_argument("--dns_data_path", type=str,
+                        default=config.DNS_DATA_PATH,
                         help="Path to the RDAP dataset CSV.")
     parser.add_argument("--pretrained_model_name", type=str,
                         default=config.PRETRAINED_MODEL_NAME,
@@ -53,10 +56,12 @@ def main():
     config.DATA_TYPE = args.data_type
     if args.data_type == "domain":
         config.DATA_PATH = args.domain_data_path
-        # config.TYPE = "domain"
-    else:  # "rdap"
+    elif args.data_type == "rdap":
         config.DATA_PATH = args.rdap_data_path
-        # config.TYPE = "rdap"
+    elif args.data_type == "dns":
+        config.DATA_PATH = args.dns_data_path
+    else:
+        pass
     
     config.TYPE = args.type
     config.PRETRAINED_MODEL_NAME = args.pretrained_model_name
@@ -85,6 +90,9 @@ def main():
     elif config.DATA_TYPE == "rdap": 
         train_dataset = RDAPDataset(train_df, tokenizer, config.MAX_LENGTH)
         val_dataset = RDAPDataset(val_df, tokenizer, config.MAX_LENGTH)
+    elif config.DATA_TYPE == "dns": 
+        train_dataset = DNSDataset(train_df, tokenizer, config.MAX_LENGTH)
+        val_dataset = DNSDataset(val_df, tokenizer, config.MAX_LENGTH)
     
     # Inspect a few examples
     # num_samples_to_check = 10  # You can adjust this number

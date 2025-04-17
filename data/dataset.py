@@ -18,7 +18,7 @@ class DatasetLoader:
         if self.data_type == "domain":
             self.dtype = {"domain_name": "string", "label": "int8"}
             self.usecols = ["domain_name", "label"]
-        elif self.data_type == "rdap":
+        elif self.data_type == "rdap" or self.data_type == "dns":
             self.dtype = {"input_string": "string", "label": "int8"}
             self.usecols = ["input_string", "label"]
         else:
@@ -91,3 +91,9 @@ class RDAPDataset(Dataset):
             'attention_mask': encoding['attention_mask'].squeeze(0),
             'label': torch.tensor(label, dtype=torch.long)
         }
+        
+class DNSDataset(RDAPDataset):
+    """
+    PyTorch Dataset for DNS data.
+    """
+    pass

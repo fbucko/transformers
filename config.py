@@ -7,9 +7,10 @@ class Config:
     # Paths for each data type
     # Adjust these paths as needed
     TYPE = "dga"  # or "malware", "phishing"
-    DOMAIN_DATA_PATH = "../datasets/dga_preprocessed.csv"
+    DOMAIN_DATA_PATH = "../datasets/dga/dga_preprocessed.csv"
     RDAP_DATA_PATH = "../datasets/phishing/rdap_phishing_preprocessed.csv"
-#     RDAP_DATA_PATH = "../datasets/malware/rdap_malware_preprocessed.csv"
+    # DNS_DATA_PATH = "../datasets/phishing/dns_phishing_preprocessed.csv"
+    DNS_DATA_PATH = "../datasets/malware/dns_malware_preprocessed.csv"
     
     # Other parameters remain the same
     MAX_LENGTH = 64
