@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 from transformers import AutoTokenizer
 from config import Config
 from data.dataset import DatasetLoader, DomainDataset, RDAPDataset, DNSDataset
-from models.transformer_model import get_model
+from models.transformer_model import get_model_standard, get_model_adapters
 from training.trainer import train
 
 def parse_args(config: Config):
@@ -43,6 +43,11 @@ def parse_args(config: Config):
     parser.add_argument("--distributed_port", type=int,
                         default=config.DISTRIBUTED_PORT,
                         help="Port for distributed training initialization.")
+    parser.add_argument(
+        "--use_adapters",
+        action="store_true",
+        help="If set, use adapter-based fine-tuning instead of full fine-tuning."
+    )
     return parser.parse_args()
 
 def main():
@@ -94,6 +99,13 @@ def main():
         train_dataset = DNSDataset(train_df, tokenizer, config.MAX_LENGTH)
         val_dataset = DNSDataset(val_df, tokenizer, config.MAX_LENGTH)
     
+     # Pick your model‑factory
+    if args.use_adapters:
+        get_model_fn = get_model_adapters
+        config.USE_ADAPTERS = True
+    else:
+        get_model_fn = get_model_standard
+
     # Inspect a few examples
     # num_samples_to_check = 10  # You can adjust this number
 
@@ -109,7 +121,7 @@ def main():
     #     print("-" * 50)
     
     # Start the training process, passing the config object along.
-    train(config, train_dataset, val_dataset, tokenizer, get_model)
+    train(config, train_dataset, val_dataset, tokenizer, get_model_fn)
 
 if __name__ == "__main__":
     main()

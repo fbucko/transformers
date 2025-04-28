@@ -91,7 +91,20 @@ def main_worker(gpu, ngpus_per_node, args, train_dataset, val_dataset, tokenizer
     # Initialize model and wrap with DDP
     model = get_model_fn(args.PRETRAINED_MODEL_NAME)
     model.to(device)
-    model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[gpu], output_device=gpu)
+    if args.USE_ADAPTERS:
+        model = torch.nn.parallel.DistributedDataParallel(
+            model,
+            device_ids=[gpu],
+            output_device=gpu,
+            find_unused_parameters=True
+        )
+        args.TYPE = args.TYPE + "_adapters"
+    else:
+        model = torch.nn.parallel.DistributedDataParallel(
+            model,
+            device_ids=[gpu],
+            output_device=gpu,
+        )
 
     optimizer = optim.AdamW(model.parameters(), lr=args.LEARNING_RATE)
 

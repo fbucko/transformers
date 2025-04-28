@@ -24,3 +24,5 @@ class Config:
     MODEL_NAMES = [
          "distilbert-base-uncased", 
     ]
+    
+    USE_ADAPTERS = False
