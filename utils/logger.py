@@ -1,9 +1,20 @@
 # utils/logger.py
+
 import os
 import csv
 from datetime import datetime
 
-def log_metrics(run_id, epoch, train_loss, val_acc, val_precision, val_recall, val_f1, log_file="training_logs.csv"):
+def log_metrics(
+    run_id,
+    epoch,
+    train_loss,
+    val_acc,
+    val_precision,
+    val_recall,
+    val_f1,
+    val_loss,
+    log_file="training_logs.csv"
+):
     """
     Appends training metrics for each epoch to a CSV file.
     """
@@ -11,8 +22,14 @@ def log_metrics(run_id, epoch, train_loss, val_acc, val_precision, val_recall, v
     with open(log_file, 'a', newline='') as f:
         writer = csv.writer(f)
         if not file_exists:
-            writer.writerow(["run_id", "epoch", "train_loss", "val_acc", "val_precision", "val_recall", "val_f1", "timestamp"])
+            writer.writerow([
+                "run_id", "epoch", "train_loss",
+                "val_loss", "val_acc", "val_precision",
+                "val_recall", "val_f1", "timestamp"
+            ])
         writer.writerow([
-            run_id, epoch, train_loss, val_acc, val_precision, val_recall, val_f1,
+            run_id, epoch, train_loss,
+            val_loss, val_acc, val_precision,
+            val_recall, val_f1,
             datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         ])
