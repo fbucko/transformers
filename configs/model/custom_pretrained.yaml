@@ -1,0 +1,6 @@
+# configs/model/custom_pretrained.yaml
+name: custom-pretrained
+model_type: custom-pretrained-tokenizer      # factory branch
+tokenizer_strategy: pretrained-tokenizer
+ngram_size: 3                # unused for 'char'
+num_labels: 2

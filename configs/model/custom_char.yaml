@@ -1,0 +1,6 @@
+# configs/model/custom_char.yaml
+name: custom-char
+model_type: custom-char      # factory branch
+tokenizer_strategy: char
+ngram_size: 3                # unused for 'char'
+num_labels: 2

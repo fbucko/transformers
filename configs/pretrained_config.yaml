@@ -1,0 +1,19 @@
+# configs/config.yaml
+
+defaults:
+  - data:   domain
+  - task:   malware
+  - model:  distilbert_base_uncased
+  - train:  bert_architectures_params
+  - experiments: null    # ← register the experiments group
+  - _self_
+
+data_root: ../datasets
+seed: 42
+distributed_port: 23456
+
+hydra:
+  run:
+    dir: .
+  job:
+    chdir: false

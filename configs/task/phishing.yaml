@@ -1,0 +1,6 @@
+task: phishing
+max_lengths:
+  domain: 32
+  geo:  64
+  dns: 150
+  rdap: 250

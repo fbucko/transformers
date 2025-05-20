@@ -1,0 +1,3 @@
+task: dga
+max_lengths:
+  domain: 32

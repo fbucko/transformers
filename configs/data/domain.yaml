@@ -1,0 +1,4 @@
+type: domain
+path: "${data_root}/${task.task}/${task.task}_preprocessed.csv"
+val_split: 0.20
+max_length: 32

@@ -1,0 +1,133 @@
+# configs/experiments/rdap_dns_geo.yaml
+
+defaults:
+  - _self_
+
+hydra:
+  mode: MULTIRUN
+
+
+jobs:
+# ============= RDAP =============
+  - data:
+      type: rdap
+      path: ${data_root}/${task.task}/rdap_${task.task}_preprocessed.csv
+      val_split: 0.20
+    task:
+      task: malware
+    model: 
+      name: google/electra-base-discriminator
+      use_adapters: false
+      num_labels: 2
+    train:
+      batch_size:    16
+      epochs:        20
+      learning_rate: 4.749974771378411e-05
+      weight_decay:  0.019871568153417243
+      lr_scheduler:  linear
+      warmup_ratio:  0.00110442342472048
+      patience:      3
+      ckpt_monitor:  loss
+
+  - data:
+      type: rdap
+      path: ${data_root}/${task.task}/rdap_${task.task}_preprocessed.csv
+      val_split: 0.20
+    task:
+      task: phishing
+    model:
+      name: distilbert-base-uncased
+      use_adapters: false
+      num_labels: 2
+    train:
+      batch_size:    64
+      epochs:        20
+      learning_rate: 3.946212980759097e-05
+      weight_decay:  0.09266588657937942
+      lr_scheduler:  linear
+      warmup_ratio:  0.1454543991712842
+      patience:      3
+      ckpt_monitor:  loss
+
+# ============= DNS =============
+  - data:
+      type: dns
+      path: ${data_root}/${task.task}/dns_${task.task}_preprocessed.csv
+      val_split: 0.20
+      max_length: 150
+    task:
+      task: malware
+    model:
+      name: google/electra-base-discriminator
+      use_adapters: false
+      num_labels: 2
+    train:
+      batch_size:    32
+      epochs:        20
+      learning_rate: 4.749974771378411e-05
+      weight_decay:  0.019871568153417243
+      lr_scheduler:  linear
+      warmup_ratio:  0.00110442342472048
+      patience:      3
+      ckpt_monitor:  loss
+
+  - data:
+      type: dns
+      path: ${data_root}/${task.task}/dns_${task.task}_preprocessed.csv
+      val_split: 0.20
+      max_length: 150
+    task:
+      task: phishing
+    model:
+      name: distilbert-base-uncased
+      use_adapters: false
+      num_labels: 2
+    train:
+      batch_size:    128
+      epochs:        20
+      learning_rate: 3.946212980759097e-05
+      weight_decay:  0.09266588657937942
+      lr_scheduler:  linear
+      warmup_ratio:  0.1454543991712842
+      patience:      3
+      ckpt_monitor:  loss
+# ============= GEO =============
+  - data:
+      type: geo
+      path: ${data_root}/${task.task}/geo_${task.task}_preprocessed.csv
+      val_split: 0.20
+    task:
+      task: malware
+    model:
+      name: google/electra-base-discriminator
+      use_adapters: false
+      num_labels: 2
+    train:
+      batch_size:    128
+      epochs:        20
+      learning_rate: 4.749974771378411e-05
+      weight_decay:  0.019871568153417243
+      lr_scheduler:  linear
+      warmup_ratio:  0.00110442342472048
+      patience:      3
+      ckpt_monitor:  loss
+
+  - data:
+      type: geo
+      path: ${data_root}/${task.task}/geo_${task.task}_preprocessed.csv
+      val_split: 0.20
+    task:
+      task: phishing
+    model:
+      name: distilbert-base-uncased
+      use_adapters: false
+      num_labels: 2
+    train:
+      batch_size:    256
+      epochs:        20
+      learning_rate: 3.946212980759097e-05
+      weight_decay:  0.09266588657937942
+      lr_scheduler:  linear
+      warmup_ratio:  0.1454543991712842
+      patience:      3
+      ckpt_monitor:  loss
