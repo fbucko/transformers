@@ -20,3 +20,5 @@ data/**/*.json
 models/**/*.h5
 models/**/*.pt
 
+# Hydra outputs
+.hydra/
