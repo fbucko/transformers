@@ -1,0 +1,10 @@
+defaults:
+ - _self_                         # first merge in this file
+ - /data: domain_data             # from configs/data/domain_data.yaml
+ - /model: full_finetune           # from configs/model/full-finetune.yaml
+ - /train: adamw_linear_distilbert # from configs/train/adamw_linear_distilbert.yaml
+jobs:
+  - name: distilbert_dga
+    task: dga
+    model:
+      name: "distilbert-base-uncased"

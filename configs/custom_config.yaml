@@ -1,0 +1,17 @@
+# configs/experiments/custom_suite.yaml
+defaults:
+  - data: domain                       # look under configs/data/domain.yaml
+  - model: custom_char                 # look under configs/model/custom_char.yaml
+  - task: malware
+  - train: bert_architectures_params   # look under configs/train/bert_architectures_params.yaml
+  - _self_
+
+data_root: ../datasets
+seed: 42
+distributed_port: 23456
+
+hydra:
+  run:
+    dir: .
+  job:
+    chdir: false

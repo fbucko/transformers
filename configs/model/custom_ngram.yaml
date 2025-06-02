@@ -1,0 +1,6 @@
+# configs/model/custom_ngram.yaml
+name: custom-ngram
+model_type: custom-ngram
+tokenizer_strategy: ngram
+ngram_size: 3
+num_labels: 2

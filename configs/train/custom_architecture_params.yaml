@@ -1,0 +1,8 @@
+batch_size:    512
+epochs:        100
+learning_rate: 3.946212980759097e-05
+weight_decay:  0.09266588657937942
+lr_scheduler:  linear
+warmup_ratio:  0.1454543991712842
+patience:      3
+ckpt_monitor:  loss
