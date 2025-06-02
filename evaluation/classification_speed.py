@@ -1,3 +1,12 @@
+"""
+Author: Filip Bucko
+Email: xbucko05@vutbr.cz
+Institution: Brno University of Technology - Faculty of Information Technology
+Date: May 21, 2025
+Description:
+    Benchmarks multiple domain- and threat-classification models using Hugging Face pipelines.
+    Loads models from checkpoints, samples test inputs, and reports average inference latency.
+"""
 import time
 import torch
 import pandas as pd
@@ -8,7 +17,7 @@ from transformers import (
     pipeline,
 )
 
-# 1. CONFIGURATION: base model for tokenizer/config, plus your .pt checkpoint
+# 1. CONFIGURATION: base model for tokenizer/config + .pt checkpoint
 CONFIG = {
     "Domain-DGA-BERT-medium": {
         "base_model": "prajjwal1/bert-medium",
@@ -74,13 +83,13 @@ print(f"Running inference on {'GPU' if device>=0 else 'CPU'}\n")
 pipes = {}
 for name, conf in CONFIG.items():
     print(f"Loading {name} …")
-    # 3.1 tokenizer + config from the base pre-trained model
+    # 1. tokenizer + config from the base pre-trained model
     tokenizer = AutoTokenizer.from_pretrained(conf["base_model"])
     config    = AutoConfig.from_pretrained(conf["base_model"])
-    # 3.2 instantiate fresh model
+    # 2. instantiate fresh model
     model     = AutoModelForSequenceClassification.from_config(config)
 
-    # 3.3 load your .pt checkpoint
+    # 3. load .pt checkpoint
     raw = torch.load(conf["ckpt_path"], map_location="cpu")
     # unwrap common wrappers
     if isinstance(raw, dict) and "state_dict" in raw:

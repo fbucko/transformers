@@ -1,3 +1,12 @@
+"""
+Author: Filip Bucko
+Email: xbucko05@vutbr.cz
+Institution: Brno University of Technology - Faculty of Information Technology
+Date: May 21, 2025
+Description:
+    Computes and displays the sizes of model checkpoint files defined in CONFIG.
+    Reports each file's size in megabytes or marks as "N/A" if inaccessible.
+"""
 import os
 import pandas as pd
 

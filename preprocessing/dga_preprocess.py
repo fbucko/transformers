@@ -1,11 +1,11 @@
 """
 Author: Filip Bucko
 Email: xbucko05@vutbr.cz
-Institution: Brno University of Technology – Faculty of Information Technology
+Institution: Brno University of Technology - Faculty of Information Technology
 Date: May 19, 2025
 Description:
     Builds a balanced DGA vs. benign domain dataset by sampling and labeling.
-    Automatically locates the project’s `datasets` folder regardless of where the script is run.
+    Automatically locates the project's `datasets` folder regardless of where the script is run.
 """
 
 import pandas as pd
@@ -13,7 +13,7 @@ from pathlib import Path
 
 def find_project_root() -> Path:
     """
-    Walk up from this script’s directory until a 'datasets' folder is found.
+    Walk up from this script's directory until a 'datasets' folder is found.
     Returns the Path to the project root containing 'datasets'.
     """
     current = Path(__file__).resolve().parent
